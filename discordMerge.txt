@@ -1,0 +1,9 @@
+#https://support.discord.com/hc/en-us/community/posts/360032701912-Channel-Merging
+
+This is the original idea doc.
+My goal with this app is to merge discord (or similar) chat histories int oa new channel.
+    1. Download discord chat(s)
+    2. Sort
+    3. Print
+
+Got a GUI for downloading: 
