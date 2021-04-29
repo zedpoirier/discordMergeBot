@@ -1,13 +1,44 @@
 #https://support.discord.com/hc/en-us/community/posts/360032701912-Channel-Merging
-#define butt 88
+
+import os
 import discord
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+GUILD = os.getenv("DISCORD_GUILD")
+client = discord.Client()
+
+testID = 837354270939545670
+
+@client.event
+async def on_ready():
+    print(f'{client.user} has connected to Discord!')
+    guild = client.guilds[0]
+    print(f'{guild.name} (id: {guild.id})')
+
+@client.event
+async def on_message(message):
+        # don't respond to ourselves
+        if message.content == 'ping':
+            await message.channel.send('pong')
+        if message.content == 'pong':
+            await message.channel.send('ping')
+
+client.run(TOKEN)
+
+
+
+
+
+
+
+
+
+
 
 # connect to guild
 id = 261301479036420097
-client = discord.Client()
-client.connect()
-
-client.close()
 
 # download
 chat = {1:"test",
