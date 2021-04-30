@@ -9,7 +9,7 @@ import discord.ext.commands
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-GUILD = os.getenv("DISCORD_GUILD")
+#GUILD = os.getenv("DISCORD_GUILD")
 testID = 837354270939545670
 
 client = discord.ext.commands.Bot(command_prefix='!')
@@ -26,13 +26,15 @@ async def clear(ctx, amount = 5):
 
 @client.command(name='history', help='save history of channel')
 async def history(ctx, amount = 5):
+    await ctx.channel.purge(limit=1)
     msgs = {}
-    counter = 0
     async for message in ctx.channel.history(limit=amount):
-        counter += 1
-        auth = str(message.author.display_name) + "-" + str(counter)
-        msgs[auth] = message.content
-    print(msgs)
+        date = message.created_at
+        msgs[date] = [message.author.display_name, message.content]
+    for msg in msgs:
+        await ctx.send("`" + msgs[msg][0] + " - " + str(msg) + "`")
+        await ctx.send(msgs[msg][1])
+    
 
 @client.command(name='nick', help='change bot name')
 async def nick(ctx, newname = "noname"):
