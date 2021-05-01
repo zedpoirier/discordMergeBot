@@ -10,7 +10,7 @@ import discord.ext.commands
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 #GUILD = os.getenv("DISCORD_GUILD")
-testID = 837354270939545670
+archiveID = 837804547623354438
 
 client = discord.ext.commands.Bot(command_prefix='!')
 
@@ -21,19 +21,38 @@ async def on_ready():
     print(f'{guild.name} (id: {guild.id})')
 
 @client.command(name='clear', help='this command will clear msgs')
-async def clear(ctx, amount = 5):
-    await ctx.channel.purge(limit=amount)
+async def clear(ctx, amount = 1):
+    await ctx.channel.purge(limit=amount + 1)
 
-@client.command(name='history', help='save history of channel')
-async def history(ctx, amount = 5):
+@client.command(name='arch', help='save history of channel')
+async def arch(ctx, amount = 1):
     await ctx.channel.purge(limit=1)
-    msgs = {}
-    async for message in ctx.channel.history(limit=amount):
-        date = message.created_at
-        msgs[date] = [message.author.display_name, message.content]
-    for msg in msgs:
-        await ctx.send("`" + msgs[msg][0] + " - " + str(msg) + "`")
-        await ctx.send(msgs[msg][1])
+    archiveChannel = ctx.guild.get_channel(archiveID)
+    async for msg in ctx.channel.history(limit=amount, oldest_first=True):
+        date = msg.created_at
+        send = "`" + msg.author.display_name + " - " + str(msg.created_at) + "`\n"
+        if msg.content != "":
+            send += msg.content
+        if msg.attachments:
+            emb = discord.Embed(desciption='image', color=0x333333)
+            emb.set_image(url=msg.attachments[0].url)
+            await archiveChannel.send(content=send, embed=emb)
+        else:
+            await archiveChannel.send(send)
+
+
+
+    #     msgs[date] = [msg.author.display_name, msg.content, msg.embeds]
+    # for msg in msgs:
+    #     hisMsg = "`" + msgs[msg][0] + " - " + str(msg) + "`\n"
+    #     embMsg = []
+    #     if msgs[msg][1] != "":
+    #         hisMsg += msgs[msg][1]
+    #         await ctx.send(content=hisMsg)
+    #         hisMsg = ""
+    #     if len(msgs[msg][2]) > 0:
+    #         embMsg = msgs[msg][2][0]
+    #         await ctx.send(embed=embMsg)
     
 
 @client.command(name='nick', help='change bot name')
